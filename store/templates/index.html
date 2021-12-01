@@ -1,0 +1,158 @@
+
+
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+{% load cart %}
+{% load custom_filter %}
+<!-- body -->
+
+<div class="container-fluid my-3">
+{% comment %} carousel {% endcomment %}
+ {% comment %} <div class="container">  {% endcomment %}
+
+
+<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="https://source.unsplash.com/1600x400/weekly?shoes" class="d-block w-100" alt="...">
+      <div class="carousel-caption d-none d-md-block">
+        
+        <p  class="fa fa-align-center" style="color:Black;font-size:25px"><b> <b></p>
+        <p  class="fa fa-align-center" style="color:Orange;font-size:45px">UP TO 50% OFF</p>
+        <p class="fa fa-align-center" style="color:Black;font-size:25px">Top Brands|Great Prices</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="https://source.unsplash.com/1600x400/weekly?shoes" class="d-block w-100" alt="...">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Second slide label</h5>
+        <p>Some representative placeholder content for the second slide.</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="https://source.unsplash.com/1600x400/weekly?shoes" class="d-block w-100" alt="...">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Third slide label</h5>
+        <p>Some represen.</p>
+      </div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+
+
+<script src="js/jquery.js"></script>
+<script src="js/popper.js"></script>
+<script src ="js/bootstrap.min.js"></script>
+
+
+ {% comment %} </div>  {% endcomment %}
+
+{% comment %} carousel end {% endcomment %}
+<br>
+	<div class="row">
+
+
+		<!-- filter -->
+
+		<div class="col-lg-3 mx-auto">
+			<div class="list-group">
+
+				<a href="/" class="list-group-item list-group-item-action">All Products</a>
+
+				{% for category in categories %}
+				<a href="/?category={{category.id}}"
+					class="list-group-item list-group-item-action">{{category.name}}</a>
+				{% endfor %}
+			</div>
+		</div>
+
+    
+
+		<!-- all products -->
+		<div id='products' class="col-lg-9 mx-auto">
+			<div class="row mx-auto">
+				{% for product in products %}
+				<div class="card mx-auto mb-3" id={{product.id}} style="width: 18rem;">
+					<img class="card-img-top" src="{{product.image.url}}" alt="Card image cap">
+					<div class="card-body">
+						<p class="card-title">{{product.name}}</p>
+						<p class="card-text"><b>{{product.price|currency}}</b></p>
+						<!-- {{product | is_in_cart:request.session.cart }} -->
+					</div>
+
+          
+
+					<div class="card-footer p-0 no-gutters">
+
+						{% if product|is_in_cart:request.session.cart %}
+						<div class="row no-gutters">
+							<form action="/#{{product.id}}" class="col-2 " method="post">
+								{% csrf_token %}
+								<input hidden type="text" name='product' value='{{product.id}}'>
+								<input hidden type="text" name='remove' value='True'>
+								<input type="submit" value=" - " class="btn btn-block btn-light border-right">
+							</form>
+							<div class="text-center col">{{product|cart_quantity:request.session.cart}} in Cart</div>
+							<form action="/#{{product.id}}" class="col-2 " method="post">
+								{% csrf_token %}
+								<input hidden type="text" name='product' value='{{product.id}}'>
+								<input type="submit" value=" + " class="btn btn-block btn-light border-left">
+							</form>
+						</div>
+						{% else %}
+						<form action="/#{{product.id}}" method="POST" class="btn-block">
+							{% csrf_token %}
+							<input hidden type="text" name='product' value='{{product.id}}'>
+							<input type="submit" class="float-right btn btn-light  form-control"
+								value="Add To Cart">
+						</form>
+
+            
+						{% endif %}
+
+					</div>
+
+				</div>
+				{% endfor %}
+			</div>
+
+      <div class="form-floating">
+     <label for="floatingTextarea2">Advertisement</label>
+     <div class="container">
+  <div class="row"> 
+</div> 
+  
+  </div>
+</div>
+{% comment %} <a href="https://reliancedigital.in" >
+  <img src="{% static 'img/2.jpeg' %}" class="d-block w-100" alt="My img">
+  </a> {% endcomment %}
+
+  <a href="https://reliancedigital.in" >
+  <img src="{% static 'img/3.jpeg' %}" class="d-block w-100" alt="My img">
+  </a>
+</div>
+		</div>
+	</div>
+  
+</div>
+ 
+
+
+{% endblock %}

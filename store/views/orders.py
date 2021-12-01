@@ -1,0 +1,86 @@
+# from django.shortcuts import redirect, render
+# from store.models.customer import Customer
+# from django.contrib.auth.hashers import check_password
+# from django.views import View
+
+# class Login(View):
+#     def get(self,request):
+#         return render (request ,'login.html')
+    
+#     def post(self, request):
+#         email=request.POST.get('email')
+#         password=request.POST.get('password')
+#         customer=Customer.get_customer_by_email(email)
+#         error_message = None
+#         if customer:
+#             flag=check_password(password,customer.password)
+#             if flag:
+#                 request.session['customer']=customer.id
+               
+#                 return redirect('homepage')
+#             else:
+#                 error_message='Email or Password invalid' 
+#         else:
+#             error_message ='Email or Password invalid'
+#         print(email,password)
+#         return render(request,'login.html', {'error':error_message})
+
+# def logout(request):
+#     request.session.clear()
+#     return redirect('login')
+#
+# again
+#
+#
+#
+# from django.shortcuts import render, redirect
+#
+# from django.contrib.auth.hashers import check_password
+# from store.models.customer import Customer
+# from django.views import View
+#
+# from store.models.product import Product
+# from store.models.orders import Order
+#
+#
+# class CheckOut(View):
+#     def post(self, request):
+#         address = request.POST.get('address')
+#         phone = request.POST.get('phone')
+#         customer = request.session.get('customer')
+#         cart = request.session.get('cart')
+#         products = Product.get_products_by_id(list(cart.keys()))
+#         print(address, phone, customer, cart, products)
+#
+#         for product in products:
+#             print(cart.get(str(product.id)))
+#             order = Order(customer=Customer(id=customer),
+#                           product=product,
+#                           price=product.price,
+#                           address=address,
+#                           phone=phone,
+#                           quantity=cart.get(str(product.id)))
+#             order.save()
+#         request.session['cart'] = {}
+#
+#         return redirect('cart')
+
+
+from django.shortcuts import render, redirect
+
+from django.contrib.auth.hashers import check_password
+from store.models.customer import Customer
+from django.views import View
+
+from store.models.product import Product
+from store.models.orders import Order
+from store.middlewares.auth import auth_middleware
+
+class OrderView(View):
+
+
+    def get(self , request ):
+        customer = request.session.get('customer')
+        orders = Order.get_orders_by_customer(customer)
+        print(orders)
+        return render(request , 'orders.html'  , {'orders' : orders})
